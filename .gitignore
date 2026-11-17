@@ -1,0 +1,25 @@
+# Build output
+target/
+
+# Test artifacts
+allure-results/
+allure-report/
+logs/
+downloads/
+test-output/
+
+# Local secrets
+.env
+*.env
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
