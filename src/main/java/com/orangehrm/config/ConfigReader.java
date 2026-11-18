@@ -1,5 +1,7 @@
 package com.orangehrm.config;
 
+import com.orangehrm.driver.BrowserType;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -34,6 +36,15 @@ public final class ConfigReader {
         return getInt("timeout");
     }
 
+    public static BrowserType browser() {
+        String value = resolve("browser");
+        return value != null ? BrowserType.from(value) : FrameworkConstants.DEFAULT_BROWSER;
+    }
+
+    public static boolean headless() {
+        return getBoolean("headless", FrameworkConstants.DEFAULT_HEADLESS);
+    }
+
     public static String adminUsername() {
         return get("adminUsername");
     }
@@ -65,6 +76,17 @@ public final class ConfigReader {
         } catch (NumberFormatException e) {
             throw new IllegalStateException("Config '" + key + "' must be an integer but was '" + value + "'.", e);
         }
+    }
+
+    public static boolean getBoolean(String key, boolean defaultValue) {
+        String value = resolve(key);
+        if (value == null) {
+            return defaultValue;
+        }
+        if (!value.equalsIgnoreCase("true") && !value.equalsIgnoreCase("false")) {
+            throw new IllegalStateException("Config '" + key + "' must be true or false but was '" + value + "'.");
+        }
+        return Boolean.parseBoolean(value);
     }
 
     private static String resolve(String key) {
