@@ -39,6 +39,13 @@ public final class TestDataFactory {
         return new Employee(FAKER.get().name().firstName(), "", uniqueSuffix(), uniqueEmployeeId());
     }
 
+    /**
+     * Random employee with the given last name, e.g. to create several employees that share one marker.
+     */
+    public static Employee randomEmployee(String lastName) {
+        return new Employee(FAKER.get().name().firstName(), "", lastName, uniqueEmployeeId());
+    }
+
     public static Employee randomEmployeeWithMiddleName() {
         Faker faker = FAKER.get();
         return new Employee(faker.name().firstName(), faker.name().firstName(), uniqueSuffix(), uniqueEmployeeId());

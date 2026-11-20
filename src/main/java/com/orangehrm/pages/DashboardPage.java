@@ -1,25 +1,17 @@
 package com.orangehrm.pages;
 
-import com.orangehrm.base.BasePage;
-import com.orangehrm.components.HeaderComponent;
+import com.orangehrm.base.AuthenticatedPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-public class DashboardPage extends BasePage {
+public class DashboardPage extends AuthenticatedPage {
 
     private static final String URL_FRAGMENT = "/dashboard";
 
     private final By pageTitle = By.cssSelector(".oxd-topbar-header-breadcrumb h6");
 
-    private final HeaderComponent header;
-
     public DashboardPage(WebDriver driver) {
         super(driver);
-        this.header = new HeaderComponent(driver);
-    }
-
-    public HeaderComponent header() {
-        return header;
     }
 
     public boolean isLoaded() {
