@@ -2,6 +2,7 @@ package com.orangehrm.base;
 
 import com.orangehrm.config.ConfigReader;
 import com.orangehrm.utils.WaitUtils;
+import com.orangehrm.utils.XPathUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -68,6 +69,30 @@ public abstract class BasePage {
 
     protected String getAttribute(By locator, String attribute) {
         return waitForVisible(locator).getDomAttribute(attribute);
+    }
+
+    /**
+     * Current value of an input. Uses the DOM property because the HTML attribute does not change when the user types.
+     */
+    protected String getValue(By locator) {
+        return waitForVisible(locator).getDomProperty("value");
+    }
+
+    /**
+     * Selects an option of an OrangeHRM dropdown, which is built from divs rather than a native {@code <select>}.
+     */
+    protected void selectCustomDropdown(By dropdown, String option) {
+        click(dropdown);
+        click(By.xpath("//div[@role='listbox']//div[@role='option'][normalize-space()="
+                + XPathUtils.literal(option) + "]"));
+    }
+
+    /**
+     * Input that belongs to the form field with the given label, e.g. "Employee Id".
+     */
+    protected static By inputByLabel(String label) {
+        return By.xpath("//label[normalize-space()=" + XPathUtils.literal(label)
+                + "]/ancestor::div[contains(@class,'oxd-input-group')]//input");
     }
 
     protected boolean isDisplayed(By locator) {
