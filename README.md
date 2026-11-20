@@ -45,6 +45,16 @@ Any configuration key can be overridden by a JVM system property (`-DbaseUrl=...
 
 Screenshots of failed tests are saved to `target/screenshots/`.
 
+## Design Decisions
+
+### Explicit waits only
+
+The framework never sets an implicit wait. Every interaction in `BasePage` waits explicitly for the state it needs (visible, clickable, loaders gone). Mixing implicit and explicit waits makes timeouts unpredictable: an explicit wait for an element to *disappear* calls `findElement` internally, which is then held by the implicit wait on every poll. `Thread.sleep()` is not used anywhere.
+
+### Stale elements
+
+OrangeHRM is a Vue application that re-renders tables and forms frequently. Page objects store `By` locators rather than `WebElement` references and look elements up on each action; actions that can still hit a re-render (`click`, `getText`, reading table texts) retry on `StaleElementReferenceException` within the explicit wait timeout.
+
 ## Test Cases
 
 Manual test case specifications are documented in [docs/test-cases.md](docs/test-cases.md).
