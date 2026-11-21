@@ -14,10 +14,18 @@ public class HeaderComponent extends BasePage {
     private static final String LOGIN_URL_FRAGMENT = "/auth/login";
 
     private final By userDropdown = By.cssSelector(".oxd-userdropdown-tab");
+    private final By userName = By.cssSelector(".oxd-userdropdown-name");
     private final By logoutLink = By.xpath("//ul[contains(@class,'oxd-dropdown-menu')]//a[normalize-space()='Logout']");
 
     public HeaderComponent(WebDriver driver) {
         super(driver);
+    }
+
+    /**
+     * Name of the logged-in user as shown in the top bar, e.g. "John Doe".
+     */
+    public String getUserName() {
+        return getText(userName);
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.orangehrm.pages.pim;
 
 import com.orangehrm.base.AuthenticatedPage;
+import com.orangehrm.components.AutocompleteComponent;
 import com.orangehrm.components.DataTableComponent;
 import com.orangehrm.components.DropdownComponent;
 import com.orangehrm.config.ConfigReader;
@@ -11,18 +12,20 @@ public class EmployeeListPage extends AuthenticatedPage {
 
     private static final String PATH = "/web/index.php/pim/viewEmployeeList";
 
-    private final By employeeNameInput = By.cssSelector(".oxd-table-filter .oxd-autocomplete-text-input input");
     private final By employeeIdInput = inputByLabel("Employee Id");
     private final By searchButton = By.cssSelector(".oxd-table-filter button[type='submit']");
     private final By addButton = By.xpath("//button[normalize-space()='Add']");
 
     private final DataTableComponent table;
     private final DropdownComponent employmentStatus;
+    private final AutocompleteComponent employeeName;
 
     public EmployeeListPage(WebDriver driver) {
         super(driver);
         this.table = new DataTableComponent(driver);
         this.employmentStatus = new DropdownComponent(driver, "Employment Status");
+        this.employeeName = new AutocompleteComponent(driver,
+                By.cssSelector(".oxd-table-filter .oxd-autocomplete-text-input input"));
     }
 
     /**
@@ -37,6 +40,10 @@ public class EmployeeListPage extends AuthenticatedPage {
         return table;
     }
 
+    public AutocompleteComponent employeeName() {
+        return employeeName;
+    }
+
     public AddEmployeePage clickAdd() {
         click(addButton);
         return new AddEmployeePage(driver);
@@ -46,18 +53,18 @@ public class EmployeeListPage extends AuthenticatedPage {
      * Searches by typed (partial) name without picking an autocomplete suggestion.
      */
     public EmployeeListPage searchByName(String name) {
-        type(employeeNameInput, name);
-        return search();
+        employeeName.type(name);
+        return clickSearch();
     }
 
     public EmployeeListPage searchByEmployeeId(String employeeId) {
         type(employeeIdInput, employeeId);
-        return search();
+        return clickSearch();
     }
 
     public EmployeeListPage filterByEmploymentStatus(String status) {
         employmentStatus.select(status);
-        return search();
+        return clickSearch();
     }
 
     /**
@@ -72,7 +79,10 @@ public class EmployeeListPage extends AuthenticatedPage {
         });
     }
 
-    private EmployeeListPage search() {
+    /**
+     * Applies the current filters and waits for the table to reload.
+     */
+    public EmployeeListPage clickSearch() {
         table.reloadAfter(() -> click(searchButton));
         return this;
     }
