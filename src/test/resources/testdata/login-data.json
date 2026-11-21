@@ -1,0 +1,50 @@
+[
+  {
+    "description": "Valid username, wrong password",
+    "username": "${adminUsername}",
+    "password": "wrong-password",
+    "expected": {"alert": "Invalid credentials"}
+  },
+  {
+    "description": "Wrong username, valid password",
+    "username": "unknown.user",
+    "password": "${adminPassword}",
+    "expected": {"alert": "Invalid credentials"}
+  },
+  {
+    "description": "Empty username",
+    "username": "",
+    "password": "${adminPassword}",
+    "expected": {"username": "Required"}
+  },
+  {
+    "description": "Empty password",
+    "username": "${adminUsername}",
+    "password": "",
+    "expected": {"password": "Required"}
+  },
+  {
+    "description": "Both fields empty",
+    "username": "",
+    "password": "",
+    "expected": {"username": "Required", "password": "Required"}
+  },
+  {
+    "description": "Username with leading and trailing spaces",
+    "username": " ${adminUsername} ",
+    "password": "${adminPassword}",
+    "expected": {"alert": "Invalid credentials"}
+  },
+  {
+    "description": "Username with special characters",
+    "username": "${adminUsername}@#$%",
+    "password": "${adminPassword}",
+    "expected": {"alert": "Invalid credentials"}
+  },
+  {
+    "description": "Password in wrong letter case",
+    "username": "${adminUsername}",
+    "password": "${adminPasswordUpperCase}",
+    "expected": {"alert": "Invalid credentials"}
+  }
+]
