@@ -13,6 +13,7 @@ import java.util.List;
 public class LoginPage extends BasePage {
 
     private static final String URL_FRAGMENT = "/auth/login";
+    private static final String DASHBOARD_URL_FRAGMENT = "/dashboard";
 
     private final By usernameInput = By.name("username");
     private final By passwordInput = By.name("password");
@@ -25,8 +26,17 @@ public class LoginPage extends BasePage {
         super(driver);
     }
 
+    /**
+     * Logs in and waits for the redirect to the Dashboard. Navigating away earlier would cancel the login request.
+     *
+     * @throws IllegalStateException if the Dashboard is not reached, e.g. because the credentials were rejected
+     */
     public DashboardPage loginAs(String username, String password) {
         enterCredentials(username, password);
+        if (!waitForUrlContains(DASHBOARD_URL_FRAGMENT)) {
+            throw new IllegalStateException("Login as '" + username + "' did not reach the Dashboard. Current URL: "
+                    + driver.getCurrentUrl());
+        }
         return new DashboardPage(driver);
     }
 

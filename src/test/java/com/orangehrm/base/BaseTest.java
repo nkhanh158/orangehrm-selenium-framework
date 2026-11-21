@@ -46,6 +46,16 @@ public abstract class BaseTest {
     }
 
     /**
+     * Drops the current session, whoever is logged in, and logs in as Admin. Used by cleanup after a test
+     * has switched to a user without admin rights.
+     */
+    protected DashboardPage startNewAdminSession() {
+        driver.manage().deleteAllCookies();
+        driver.get(ConfigReader.baseUrl());
+        return loginAsAdmin();
+    }
+
+    /**
      * Registers an action that removes data created by the test. Actions run after the test, in reverse order,
      * even when the test fails. A failing cleanup is reported but never hides the test result.
      */

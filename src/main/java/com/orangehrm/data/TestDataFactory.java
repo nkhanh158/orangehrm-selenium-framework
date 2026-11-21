@@ -1,10 +1,12 @@
 package com.orangehrm.data;
 
 import com.orangehrm.models.Employee;
+import com.orangehrm.models.LoginDetails;
 import net.datafaker.Faker;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -49,6 +51,16 @@ public final class TestDataFactory {
     public static Employee randomEmployeeWithMiddleName() {
         Faker faker = FAKER.get();
         return new Employee(faker.name().firstName(), faker.name().firstName(), uniqueSuffix(), uniqueEmployeeId());
+    }
+
+    /**
+     * Unique username with a password that satisfies OrangeHRM's strength rules
+     * (upper and lower case letters, a digit and a symbol).
+     */
+    public static LoginDetails randomLoginDetails() {
+        String username = uniqueSuffix().toLowerCase(Locale.ROOT);
+        String password = "Auto#" + ThreadLocalRandom.current().nextInt(100_000, 1_000_000) + "x";
+        return new LoginDetails(username, password);
     }
 
     /**

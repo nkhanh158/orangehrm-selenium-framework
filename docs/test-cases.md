@@ -132,6 +132,8 @@ All employees are created by the test itself. Their last name is a unique marker
 | 2 | Enter a unique username and a valid password, click **Save** | Employee is saved |
 | 3 | Log out and log in with the new credentials | Dashboard opens for the new user |
 
+Deleting the employee also deletes its user account, so cleanup only removes the employee.
+
 ### PIM-04 – Required field and length validation
 
 | # | Data | Expected result |
@@ -205,7 +207,11 @@ All messages are verified in one run (soft assertions); the employee is not save
 
 | # | Step | Expected result |
 | --- | --- | --- |
-| 1 | For each row of `employees.xlsx`, create the employee | Each one is saved and can be found by Employee Id |
+| 1 | For each row of `employees.xlsx`, create the employee | Names are saved unchanged |
+| 2 | Search by the employee's Employee Id | The employee is listed |
+
+Rows cover a plain name, Vietnamese diacritics, an apostrophe, a hyphen and the 30-character maximum.
+The file holds first and middle names only; last name and Employee Id are generated so that every run is unique.
 
 ## 3. Dashboard and Navigation
 

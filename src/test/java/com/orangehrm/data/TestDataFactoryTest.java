@@ -1,6 +1,7 @@
 package com.orangehrm.data;
 
 import com.orangehrm.models.Employee;
+import com.orangehrm.models.LoginDetails;
 import org.testng.annotations.Test;
 
 import java.util.HashSet;
@@ -37,6 +38,14 @@ public class TestDataFactoryTest {
         assertEquals(employee.employeeId().length(), 10);
         assertTrue(employee.lastName().length() <= 30);
         assertFalse(employee.middleName().isEmpty());
+    }
+
+    @Test
+    public void shouldGenerateLoginDetailsThatMeetPasswordRules() {
+        LoginDetails login = TestDataFactory.randomLoginDetails();
+        assertTrue(login.username().matches("auto_\\d{8}_\\d{6}_[0-9a-f]{4}"), login.username());
+        assertTrue(login.password().matches("(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z\\d]).{8,}"),
+                login.password());
     }
 
     @Test
