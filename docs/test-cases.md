@@ -35,7 +35,7 @@ Manual test case specifications. Every automated test references its ID in the T
 | 3 | Empty username | "Required" under Username |
 | 4 | Empty password | "Required" under Password |
 | 5 | Both fields empty | "Required" under both fields |
-| 6 | Username with leading/trailing spaces | Recorded behaviour of the application |
+| 6 | Username with leading/trailing spaces | "Invalid credentials" alert (username is not trimmed) |
 | 7 | Username with special characters | "Invalid credentials" alert |
 | 8 | Password in wrong letter case | "Invalid credentials" alert |
 
@@ -63,7 +63,12 @@ In every case the user stays on the Login page.
 | # | Step | Expected result |
 | --- | --- | --- |
 | 1 | Log out | Login page opens |
-| 2 | Click the browser **Back** button | User stays on (or is redirected to) the Login page; internal pages are not accessible |
+| 2 | Click the browser **Back** button | Either the Login page or a cached copy of the previous page is shown |
+| 3 | Reload the page | User is redirected to the Login page; internal pages are not accessible |
+
+> **Observation:** depending on the browser's back/forward cache, step 2 sometimes shows the cached
+> Dashboard. The session is already invalid at that point (API calls return `401`), so the test verifies
+> access with a reload instead of the URL right after Back.
 
 ### AUTH-05 – Direct access to an internal page without a session
 
@@ -88,6 +93,10 @@ In every case the user stays on the Login page.
 | 1 | Click **Forgot your password?** | Reset Password page opens |
 | 2 | Enter a username and click **Reset Password** | Confirmation page states that a reset link has been sent |
 | 3 | Click **Cancel** on the Reset Password page (separate run) | User returns to the Login page |
+
+> **Not automated: step 2.** On the public demo the reset request returns `504 Gateway Time-out` after
+> about 60 seconds, so the confirmation page cannot be verified there. It will be automated against the
+> local Docker environment.
 
 ## 2. PIM – Employee Management
 
