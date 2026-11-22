@@ -1,7 +1,6 @@
 package com.orangehrm.components;
 
 import com.orangehrm.base.BasePage;
-import com.orangehrm.utils.XPathUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -10,19 +9,24 @@ import org.openqa.selenium.WebDriver;
  */
 public class DropdownComponent extends BasePage {
 
+    private static final String NO_SELECTION = "-- Select --";
+
     private final By selectedText;
 
     public DropdownComponent(WebDriver driver, String label) {
         super(driver);
-        this.selectedText = By.xpath("//label[normalize-space()=" + XPathUtils.literal(label)
-                + "]/ancestor::div[contains(@class,'oxd-input-group')]//div[contains(@class,'oxd-select-text-input')]");
+        this.selectedText = By.xpath(fieldGroup(label) + "//div[contains(@class,'oxd-select-text-input')]");
     }
 
     public void select(String option) {
         selectCustomDropdown(selectedText, option);
     }
 
+    /**
+     * Selected option, or an empty string when the placeholder "-- Select --" is shown.
+     */
     public String getSelected() {
-        return getText(selectedText);
+        String text = getText(selectedText);
+        return NO_SELECTION.equals(text) ? "" : text;
     }
 }

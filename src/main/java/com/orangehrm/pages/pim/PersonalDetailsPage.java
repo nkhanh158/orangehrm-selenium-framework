@@ -1,18 +1,22 @@
 package com.orangehrm.pages.pim;
 
 import com.orangehrm.base.AuthenticatedPage;
+import com.orangehrm.components.DatePickerComponent;
+import com.orangehrm.components.DropdownComponent;
 import com.orangehrm.models.Employee;
+import com.orangehrm.models.Gender;
+import com.orangehrm.models.PersonalDetails;
+import com.orangehrm.utils.XPathUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 
+import java.time.LocalDate;
+import java.util.Arrays;
+
 public class PersonalDetailsPage extends AuthenticatedPage {
 
     private static final String URL_FRAGMENT = "/pim/viewPersonalDetails";
-
-    private final By firstNameInput = By.name("firstName");
-    private final By middleNameInput = By.name("middleName");
-    private final By lastNameInput = By.name("lastName");
     private static final String DEFAULT_PICTURE_PATH = "/web/images/default-photo.png";
     private static final String SAME_IMAGE_SCRIPT = """
             const done = arguments[arguments.length - 1];
@@ -23,11 +27,24 @@ public class PersonalDetailsPage extends AuthenticatedPage {
               .catch(error => done(String(error)));
             """;
 
+    private final By firstNameInput = By.name("firstName");
+    private final By middleNameInput = By.name("middleName");
+    private final By lastNameInput = By.name("lastName");
     private final By employeeIdInput = inputByLabel("Employee Id");
+    private final By otherIdInput = inputByLabel("Other Id");
     private final By profilePicture = By.cssSelector(".orangehrm-edit-employee-image img");
+    // The page has a second form (Custom Fields) with its own Save button.
+    private final By saveButton = By.xpath("//form[.//input[@name='firstName']]//button[@type='submit']");
+
+    private final DropdownComponent nationality;
+    private final DropdownComponent maritalStatus;
+    private final DatePickerComponent dateOfBirth;
 
     public PersonalDetailsPage(WebDriver driver) {
         super(driver);
+        this.nationality = new DropdownComponent(driver, "Nationality");
+        this.maritalStatus = new DropdownComponent(driver, "Marital Status");
+        this.dateOfBirth = new DatePickerComponent(driver, "Date of Birth");
     }
 
     /**
@@ -62,10 +79,74 @@ public class PersonalDetailsPage extends AuthenticatedPage {
                     + driver.getCurrentUrl());
         }
         wait.until(d -> !getValue(firstNameInput).isEmpty());
+        waitForSpinnerToDisappear();
         return new Employee(
                 getValue(firstNameInput),
                 getValue(middleNameInput),
                 getValue(lastNameInput),
                 getValue(employeeIdInput));
+    }
+
+    public PersonalDetails getPersonalDetails() {
+        Employee employee = getEmployee();
+        return new PersonalDetails(
+                employee,
+                getValue(otherIdInput),
+                nationality.getSelected(),
+                maritalStatus.getSelected(),
+                dateOfBirth.get(),
+                getSelectedGender());
+    }
+
+    public PersonalDetailsPage enterMiddleName(String middleName) {
+        type(middleNameInput, middleName);
+        return this;
+    }
+
+    public PersonalDetailsPage enterDateOfBirth(LocalDate date) {
+        dateOfBirth.set(date);
+        return this;
+    }
+
+    /**
+     * Clicks the label: the radio input itself is hidden behind a styled span.
+     */
+    public PersonalDetailsPage selectGender(Gender gender) {
+        click(genderLabel(gender));
+        return this;
+    }
+
+    /**
+     * Saves the Personal Details form.
+     *
+     * @return the confirmation toast message, which is the signal that the update has been stored
+     */
+    public String save() {
+        click(saveButton);
+        return toast().getMessage();
+    }
+
+    /**
+     * Reloads the page so that values are read back from the server rather than from the edited form.
+     */
+    public PersonalDetailsPage reload() {
+        driver.navigate().refresh();
+        return new PersonalDetailsPage(driver);
+    }
+
+    private Gender getSelectedGender() {
+        return Arrays.stream(Gender.values())
+                .filter(gender -> driver.findElement(genderRadio(gender)).isSelected())
+                .findFirst()
+                .orElse(null);
+    }
+
+    private static By genderLabel(Gender gender) {
+        return By.xpath(fieldGroup("Gender") + "//label[normalize-space()=" + XPathUtils.literal(gender.label()) + "]");
+    }
+
+    private static By genderRadio(Gender gender) {
+        return By.xpath(fieldGroup("Gender") + "//label[normalize-space()=" + XPathUtils.literal(gender.label())
+                + "]//input[@type='radio']");
     }
 }

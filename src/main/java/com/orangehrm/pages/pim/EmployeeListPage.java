@@ -80,6 +80,22 @@ public class EmployeeListPage extends AuthenticatedPage {
     }
 
     /**
+     * Ticks the rows with the given Employee Ids, deletes them with "Delete Selected" and waits for the table
+     * to reload.
+     *
+     * @return the confirmation toast message
+     */
+    public String deleteSelectedEmployees(String... employeeIds) {
+        for (String employeeId : employeeIds) {
+            table.selectRow(employeeId);
+        }
+        return table.reloadAfter(() -> {
+            table.clickDeleteSelected().confirm();
+            return toast().getMessage();
+        });
+    }
+
+    /**
      * Applies the current filters and waits for the table to reload.
      */
     public EmployeeListPage clickSearch() {

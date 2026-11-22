@@ -24,6 +24,10 @@ public record Employee(String firstName, String middleName, String lastName, Str
                 : firstName + " " + middleName + " " + lastName;
     }
 
+    public Employee withMiddleName(String newMiddleName) {
+        return new Employee(firstName, newMiddleName, lastName, employeeId);
+    }
+
     public Employee withEmployeeId(String newEmployeeId) {
         return new Employee(firstName, middleName, lastName, newEmployeeId);
     }
