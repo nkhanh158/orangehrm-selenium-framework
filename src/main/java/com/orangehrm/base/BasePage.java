@@ -88,11 +88,20 @@ public abstract class BasePage {
     }
 
     /**
+     * XPath of the input group (label, control and validation message) of the form field with the given label.
+     * The label sits inside {@code oxd-input-group__label-wrapper}, so the class is matched as a whole token,
+     * and {@code [1]} picks the closest group because groups can be nested.
+     */
+    protected static String fieldGroup(String label) {
+        return "//label[normalize-space()=" + XPathUtils.literal(label)
+                + "]/ancestor::div[" + XPathUtils.hasClass("oxd-input-group") + "][1]";
+    }
+
+    /**
      * Input that belongs to the form field with the given label, e.g. "Employee Id".
      */
     protected static By inputByLabel(String label) {
-        return By.xpath("//label[normalize-space()=" + XPathUtils.literal(label)
-                + "]/ancestor::div[contains(@class,'oxd-input-group')]//input");
+        return By.xpath(fieldGroup(label) + "//input");
     }
 
     protected boolean isDisplayed(By locator) {

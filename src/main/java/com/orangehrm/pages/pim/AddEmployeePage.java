@@ -3,6 +3,7 @@ package com.orangehrm.pages.pim;
 import com.orangehrm.base.AuthenticatedPage;
 import com.orangehrm.models.Employee;
 import com.orangehrm.models.LoginDetails;
+import com.orangehrm.utils.XPathUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -21,7 +22,7 @@ public class AddEmployeePage extends AuthenticatedPage {
         FIRST_NAME("//input[@name='firstName']"),
         MIDDLE_NAME("//input[@name='middleName']"),
         LAST_NAME("//input[@name='lastName']"),
-        EMPLOYEE_ID("//label[normalize-space()='Employee Id']/ancestor::div[contains(@class,'oxd-input-group')]//input");
+        EMPLOYEE_ID(fieldGroup("Employee Id") + "//input");
 
         private final String inputXPath;
 
@@ -38,7 +39,7 @@ public class AddEmployeePage extends AuthenticatedPage {
          * {@code [1]} picks the nearest ancestor because the three name inputs share one outer group.
          */
         private By error() {
-            return By.xpath(inputXPath + "/ancestor::div[contains(@class,'oxd-input-group')][1]"
+            return By.xpath(inputXPath + "/ancestor::div[" + XPathUtils.hasClass("oxd-input-group") + "][1]"
                     + "//span[contains(@class,'oxd-input-field-error-message')]");
         }
     }

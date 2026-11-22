@@ -2,7 +2,6 @@ package com.orangehrm.pages;
 
 import com.orangehrm.base.BasePage;
 import com.orangehrm.models.LoginErrors;
-import com.orangehrm.utils.XPathUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -78,8 +77,6 @@ public class LoginPage extends BasePage {
     }
 
     private static By fieldError(String label) {
-        return By.xpath("//label[normalize-space()=" + XPathUtils.literal(label)
-                + "]/ancestor::div[contains(@class,'oxd-input-group')]"
-                + "//span[contains(@class,'oxd-input-field-error-message')]");
+        return By.xpath(fieldGroup(label) + "//span[contains(@class,'oxd-input-field-error-message')]");
     }
 }

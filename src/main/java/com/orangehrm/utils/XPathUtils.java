@@ -18,4 +18,12 @@ public final class XPathUtils {
         }
         return "concat('" + value.replace("'", "', \"'\", '") + "')";
     }
+
+    /**
+     * Predicate that matches elements having the CSS class as a whole token. {@code contains(@class, 'x')}
+     * would also match {@code x__wrapper} or {@code x-icon}.
+     */
+    public static String hasClass(String className) {
+        return "contains(concat(' ', normalize-space(@class), ' '), ' " + className + " ')";
+    }
 }
