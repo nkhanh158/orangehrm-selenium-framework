@@ -173,6 +173,8 @@ All messages are verified in one run (soft assertions); the employee is not save
 | 2 | Change Middle Name, Date of Birth and Gender, click **Save** | "Successfully Updated" toast |
 | 3 | Reload the page | New values are displayed; untouched fields keep their previous values |
 
+The new date of birth has a day above 12, so a day/month mix-up in the configured date format would be detected.
+
 ### PIM-09 – Delete an employee from its table row
 
 | # | Step | Expected result |
@@ -193,8 +195,12 @@ All messages are verified in one run (soft assertions); the employee is not save
 
 | # | Step | Expected result |
 | --- | --- | --- |
-| 1 | Sort **First (& Middle) Name** ascending | Names on the page are in ascending order |
-| 2 | Sort descending | Names on the page are in descending order |
+| 1 | Create employees "charlie", "alpha" and "Bravo" sharing a last name marker and search by it | Three records are listed |
+| 2 | Sort **First (& Middle) Name** descending | charlie, Bravo, alpha |
+| 3 | Sort ascending | alpha, Bravo, charlie |
+
+Sorting ignores case. Descending is checked first because the list is sorted ascending by name by default,
+so an ascending check alone would pass even if sorting did nothing.
 
 ### PIM-12 – Pagination
 
@@ -202,6 +208,10 @@ All messages are verified in one run (soft assertions); the employee is not save
 | --- | --- | --- |
 | 1 | Read the total record count | — |
 | 2 | Visit every page and count the rows | Sum of rows equals the total record count |
+| 3 | Check the last page | There is no next page; the number of pages is the total divided by 50, rounded up |
+
+Skipped when the environment has 50 employees or fewer, since there is then no second page.
+On the shared demo, other users can add or delete employees while the pages are visited.
 
 ### PIM-13 – Create employees from an Excel file
 

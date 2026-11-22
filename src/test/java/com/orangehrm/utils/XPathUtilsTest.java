@@ -20,4 +20,10 @@ public class XPathUtilsTest {
     public void shouldUseConcatWhenValueContainsBothQuoteTypes() {
         assertEquals(XPathUtils.literal("O'Neil \"Jr\""), "concat('O', \"'\", 'Neil \"Jr\"')");
     }
+
+    @Test
+    public void shouldMatchClassAsWholeToken() {
+        assertEquals(XPathUtils.hasClass("oxd-input-group"),
+                "contains(concat(' ', normalize-space(@class), ' '), ' oxd-input-group ')");
+    }
 }
