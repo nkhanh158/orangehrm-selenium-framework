@@ -17,6 +17,8 @@ import java.util.Deque;
 @Listeners(TestListener.class)
 public abstract class BaseTest {
 
+    private static final String LOGOUT_PATH = "/web/index.php/auth/logout";
+
     protected WebDriver driver;
 
     private final Deque<Runnable> cleanupActions = new ArrayDeque<>();
@@ -46,12 +48,14 @@ public abstract class BaseTest {
     }
 
     /**
-     * Drops the current session, whoever is logged in, and logs in as Admin. Used by cleanup after a test
+     * Ends the current session, whoever is logged in, and logs in as Admin. Used by cleanup after a test
      * has switched to a user without admin rights.
+     * <p>
+     * The session is ended through the logout URL rather than by deleting cookies: after deleting them,
+     * every second login failed with "CSRF token validation failed".
      */
     protected DashboardPage startNewAdminSession() {
-        driver.manage().deleteAllCookies();
-        driver.get(ConfigReader.baseUrl());
+        driver.get(ConfigReader.baseUrl() + LOGOUT_PATH);
         return loginAsAdmin();
     }
 
