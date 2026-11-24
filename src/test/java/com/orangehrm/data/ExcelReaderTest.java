@@ -16,6 +16,7 @@ import java.util.Map;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertThrows;
 
+@Test(groups = "framework")
 public class ExcelReaderTest {
 
     @Test

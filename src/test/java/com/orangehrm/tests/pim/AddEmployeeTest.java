@@ -23,7 +23,7 @@ public class AddEmployeeTest extends BaseTest {
     private static final String AVATAR = "testdata/avatar.png";
     private static final int NAME_MAX_LENGTH = 30;
 
-    @Test(groups = "smoke", description = "PIM-01: Add employee with required fields only")
+    @Test(groups = {"smoke", "regression"}, description = "PIM-01: Add employee with required fields only")
     public void shouldCreateEmployeeWithRequiredFieldsOnly() {
         Employee employee = TestDataFactory.randomEmployee();
         cleanupAfterTest(() -> new EmployeeFlow(driver).deleteEmployeeIfExists(employee.employeeId()));

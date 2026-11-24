@@ -9,7 +9,7 @@ import static org.testng.Assert.assertTrue;
 
 public class AccessControlTest extends BaseTest {
 
-    @Test(groups = "regression", description = "AUTH-05: Direct access to an internal page without a session")
+    @Test(groups = {"smoke", "regression"}, description = "AUTH-05: Direct access to an internal page without a session")
     public void shouldRedirectToLoginWhenOpeningInternalPageWithoutSession() {
         EmployeeListPage.open(driver);
 
