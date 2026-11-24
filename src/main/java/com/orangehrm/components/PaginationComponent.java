@@ -39,6 +39,7 @@ public class PaginationComponent extends BasePage {
     }
 
     public void goToNextPage() {
+        log.info("Go to next page");
         table.reloadAfter(() -> click(nextButton));
     }
 }

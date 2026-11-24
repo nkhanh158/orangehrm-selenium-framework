@@ -24,7 +24,9 @@ public class DatePickerComponent extends BasePage {
     }
 
     public void set(LocalDate date) {
-        type(input, format().format(date));
+        String text = format().format(date);
+        log.debug("Set date {} as '{}'", date, text);
+        type(input, text);
     }
 
     /**

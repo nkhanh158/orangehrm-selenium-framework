@@ -1,6 +1,8 @@
 package com.orangehrm.driver;
 
 import com.orangehrm.config.FrameworkConstants;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -23,10 +25,13 @@ import java.util.Map;
  */
 public final class DriverFactory {
 
+    private static final Logger LOG = LogManager.getLogger(DriverFactory.class);
+
     private DriverFactory() {
     }
 
     public static WebDriver createDriver(BrowserType browser, boolean headless) {
+        LOG.info("Start {}{}", browser, headless ? " (headless)" : "");
         Path downloadDir = createDownloadDir();
         WebDriver driver = switch (browser) {
             case CHROME -> new ChromeDriver(chromiumOptions(new ChromeOptions(), headless, downloadDir));

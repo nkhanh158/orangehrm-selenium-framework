@@ -25,6 +25,7 @@ public class AutocompleteComponent extends BasePage {
     }
 
     public AutocompleteComponent type(String text) {
+        log.info("Type '{}'", text);
         type(input, text);
         return this;
     }
@@ -40,6 +41,7 @@ public class AutocompleteComponent extends BasePage {
     }
 
     public void select(String suggestion) {
+        log.info("Select suggestion '{}'", suggestion);
         getSuggestions();
         click(By.xpath(OPTION + "[normalize-space()=" + XPathUtils.literal(suggestion) + "]"));
     }

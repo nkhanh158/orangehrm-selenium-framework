@@ -8,6 +8,8 @@ import com.orangehrm.config.ConfigReader;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
+import java.util.Arrays;
+
 public class EmployeeListPage extends AuthenticatedPage {
 
     private static final String PATH = "/web/index.php/pim/viewEmployeeList";
@@ -32,8 +34,10 @@ public class EmployeeListPage extends AuthenticatedPage {
      * Opens the list by URL. Used for setup and cleanup, where navigation through the UI is not under test.
      */
     public static EmployeeListPage open(WebDriver driver) {
+        EmployeeListPage page = new EmployeeListPage(driver);
+        page.log.info("Open employee list");
         driver.get(ConfigReader.baseUrl() + PATH);
-        return new EmployeeListPage(driver);
+        return page;
     }
 
     public DataTableComponent table() {
@@ -45,6 +49,7 @@ public class EmployeeListPage extends AuthenticatedPage {
     }
 
     public AddEmployeePage clickAdd() {
+        log.info("Click Add");
         click(addButton);
         return new AddEmployeePage(driver);
     }
@@ -53,16 +58,19 @@ public class EmployeeListPage extends AuthenticatedPage {
      * Searches by typed (partial) name without picking an autocomplete suggestion.
      */
     public EmployeeListPage searchByName(String name) {
+        log.info("Search employees by name '{}'", name);
         employeeName.type(name);
         return clickSearch();
     }
 
     public EmployeeListPage searchByEmployeeId(String employeeId) {
+        log.info("Search employees by Employee Id {}", employeeId);
         type(employeeIdInput, employeeId);
         return clickSearch();
     }
 
     public EmployeeListPage filterByEmploymentStatus(String status) {
+        log.info("Filter employees by Employment Status '{}'", status);
         employmentStatus.select(status);
         return clickSearch();
     }
@@ -73,6 +81,7 @@ public class EmployeeListPage extends AuthenticatedPage {
      * @return the confirmation toast message, read before the toast disappears
      */
     public String deleteEmployee(String employeeId) {
+        log.info("Delete employee {} from its row", employeeId);
         return table.reloadAfter(() -> {
             table.clickDeleteInRow(employeeId).confirm();
             return toast().getMessage();
@@ -86,6 +95,7 @@ public class EmployeeListPage extends AuthenticatedPage {
      * @return the confirmation toast message
      */
     public String deleteSelectedEmployees(String... employeeIds) {
+        log.info("Delete selected employees {}", Arrays.toString(employeeIds));
         for (String employeeId : employeeIds) {
             table.selectRow(employeeId);
         }
