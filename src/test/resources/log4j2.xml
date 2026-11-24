@@ -11,7 +11,8 @@
     </Properties>
 
     <Appenders>
-        <Console name="Console" target="SYSTEM_OUT">
+        <!-- follow: write to System.out as replaced by Surefire, not to the stream captured when Log4j started. -->
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
             <PatternLayout pattern="${consolePattern}"/>
         </Console>
 
