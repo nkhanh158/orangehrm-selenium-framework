@@ -27,6 +27,25 @@ mvn clean test
 
 ## Running Tests
 
+### Test suites
+
+| Profile | Suite file | Content |
+| --- | --- | --- |
+| `regression` (default) | `testng-regression.xml` | Every test, one at a time |
+| `smoke` | `testng-smoke.xml` | Framework self-tests and the `smoke` group: the main user journeys, under 3 minutes |
+| `parallel` | `testng-parallel.xml` | Every test, three test classes at a time; the `serial` group runs afterwards on its own |
+
+```bash
+mvn clean test -Psmoke
+mvn clean test -Pregression -Dbrowser=edge -Dheadless=true
+```
+
+Groups: `smoke` (also in `regression`), `regression`, `framework` (tests of the framework itself, no application
+needed except for the driver check) and `serial` (tests that change or count shared state and must not run alongside
+others).
+
+### Options
+
 | Option | Values | Default | Example |
 | --- | --- | --- | --- |
 | `env` | `demo` | `demo` | `-Denv=demo` |
@@ -34,7 +53,7 @@ mvn clean test
 | `headless` | `true`, `false` | `false` | `-Dheadless=true` |
 
 ```bash
-# Run a single test class
+# Run a single test class (overrides the suite file)
 mvn clean test -Dtest=LoginTest
 
 # Run headless in Edge
@@ -54,6 +73,17 @@ The framework never sets an implicit wait. Every interaction in `BasePage` waits
 ### Stale elements
 
 OrangeHRM is a Vue application that re-renders tables and forms frequently. Page objects store `By` locators rather than `WebElement` references and look elements up on each action; actions that can still hit a re-render (`click`, `getText`, reading table texts) retry on `StaleElementReferenceException` within the explicit wait timeout.
+
+### Surefire 3.5.x
+
+Surefire 3.6 runs TestNG on the JUnit Platform, which cannot read TestNG suite XML files. The project stays on
+the 3.5 line so that suites, groups and parallel settings are defined in TestNG's own format.
+
+### Parallel execution
+
+`BaseTest` keeps the WebDriver in an instance field, and TestNG creates one instance per test class. Test classes
+can therefore run in parallel, but methods of the same class would share one driver, so the parallel suite uses
+`parallel="classes"`.
 
 ## Test Cases
 

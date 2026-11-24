@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!-- Every test, one at a time. There is deliberately no group filter, so a test without groups still runs. -->
+<suite name="Regression">
+    <test name="Regression">
+        <packages>
+            <package name="com.orangehrm.*"/>
+        </packages>
+    </test>
+</suite>
