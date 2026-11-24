@@ -19,6 +19,7 @@ public class DropdownComponent extends BasePage {
     }
 
     public void select(String option) {
+        log.debug("Select option '{}'", option);
         selectCustomDropdown(selectedText, option);
     }
 

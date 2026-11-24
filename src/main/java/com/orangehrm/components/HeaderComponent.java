@@ -33,6 +33,7 @@ public class HeaderComponent extends BasePage {
      * Navigating away earlier would cancel the logout request.
      */
     public LoginPage logout() {
+        log.info("Log out");
         click(userDropdown);
         click(logoutLink);
         wait.until(ExpectedConditions.urlContains(LOGIN_URL_FRAGMENT));

@@ -31,6 +31,7 @@ public class LoginPage extends BasePage {
      * @throws IllegalStateException if the Dashboard is not reached, e.g. because the credentials were rejected
      */
     public DashboardPage loginAs(String username, String password) {
+        log.info("Log in as '{}'", username);
         enterCredentials(username, password);
         if (!waitForUrlContains(DASHBOARD_URL_FRAGMENT)) {
             throw new IllegalStateException("Login as '" + username + "' did not reach the Dashboard. Current URL: "
@@ -40,6 +41,7 @@ public class LoginPage extends BasePage {
     }
 
     public LoginPage loginExpectingError(String username, String password) {
+        log.info("Log in as '{}', expecting an error", username);
         enterCredentials(username, password);
         return this;
     }
@@ -57,6 +59,7 @@ public class LoginPage extends BasePage {
     }
 
     public ForgotPasswordPage clickForgotPassword() {
+        log.info("Open Forgot your password");
         click(forgotPasswordLink);
         return new ForgotPasswordPage(driver);
     }

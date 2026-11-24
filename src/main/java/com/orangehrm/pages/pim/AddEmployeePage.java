@@ -62,6 +62,7 @@ public class AddEmployeePage extends AuthenticatedPage {
     }
 
     public AddEmployeePage enterEmployee(Employee employee) {
+        log.info("Enter employee {}", employee);
         enter(Field.FIRST_NAME, employee.firstName());
         enter(Field.MIDDLE_NAME, employee.middleName());
         enter(Field.LAST_NAME, employee.lastName());
@@ -80,6 +81,7 @@ public class AddEmployeePage extends AuthenticatedPage {
      * Selects a picture through the hidden file input; sending the path is how a user's file choice is simulated.
      */
     public AddEmployeePage uploadPicture(Path picture) {
+        log.info("Upload picture {}", picture.getFileName());
         driver.findElement(pictureInput).sendKeys(picture.toString());
         return this;
     }
@@ -96,6 +98,7 @@ public class AddEmployeePage extends AuthenticatedPage {
     }
 
     public AddEmployeePage enterLoginDetails(LoginDetails login) {
+        log.info("Create login details for user '{}'", login.username());
         click(loginDetailsSwitch);
         type(usernameInput, login.username());
         type(passwordInput, login.password());
@@ -104,6 +107,7 @@ public class AddEmployeePage extends AuthenticatedPage {
     }
 
     public PersonalDetailsPage save() {
+        log.info("Save new employee");
         click(saveButton);
         return new PersonalDetailsPage(driver);
     }
@@ -112,6 +116,7 @@ public class AddEmployeePage extends AuthenticatedPage {
      * Clicks Save when validation is expected to keep the form open.
      */
     public AddEmployeePage saveExpectingErrors() {
+        log.info("Save, expecting validation errors");
         click(saveButton);
         return this;
     }

@@ -5,8 +5,9 @@ import com.orangehrm.driver.DriverFactory;
 import com.orangehrm.listeners.TestListener;
 import com.orangehrm.pages.DashboardPage;
 import com.orangehrm.pages.LoginPage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
-import org.testng.Reporter;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
@@ -17,6 +18,7 @@ import java.util.Deque;
 @Listeners(TestListener.class)
 public abstract class BaseTest {
 
+    private static final Logger LOG = LogManager.getLogger(BaseTest.class);
     private static final String LOGOUT_PATH = "/web/index.php/auth/logout";
 
     protected WebDriver driver;
@@ -55,6 +57,7 @@ public abstract class BaseTest {
      * every second login failed with "CSRF token validation failed".
      */
     protected DashboardPage startNewAdminSession() {
+        LOG.info("End the current session and log in as Admin");
         driver.get(ConfigReader.baseUrl() + LOGOUT_PATH);
         return loginAsAdmin();
     }
@@ -68,11 +71,14 @@ public abstract class BaseTest {
     }
 
     private void runCleanupActions() {
+        if (!cleanupActions.isEmpty()) {
+            LOG.info("Cleanup: {} action(s)", cleanupActions.size());
+        }
         while (!cleanupActions.isEmpty()) {
             try {
                 cleanupActions.pop().run();
             } catch (RuntimeException e) {
-                Reporter.log("Cleanup failed: " + e, true);
+                LOG.warn("Cleanup failed", e);
             }
         }
     }

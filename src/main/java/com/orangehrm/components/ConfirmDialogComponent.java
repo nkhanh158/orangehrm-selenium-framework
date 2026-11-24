@@ -23,11 +23,13 @@ public class ConfirmDialogComponent extends BasePage {
     }
 
     public void confirm() {
+        log.debug("Confirm dialog");
         click(confirmButton);
         isNotDisplayed(dialog);
     }
 
     public void cancel() {
+        log.debug("Cancel dialog");
         click(cancelButton);
         isNotDisplayed(dialog);
     }

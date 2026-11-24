@@ -99,11 +99,13 @@ public class PersonalDetailsPage extends AuthenticatedPage {
     }
 
     public PersonalDetailsPage enterMiddleName(String middleName) {
+        log.info("Enter Middle Name '{}'", middleName);
         type(middleNameInput, middleName);
         return this;
     }
 
     public PersonalDetailsPage enterDateOfBirth(LocalDate date) {
+        log.info("Enter Date of Birth {}", date);
         dateOfBirth.set(date);
         return this;
     }
@@ -112,6 +114,7 @@ public class PersonalDetailsPage extends AuthenticatedPage {
      * Clicks the label: the radio input itself is hidden behind a styled span.
      */
     public PersonalDetailsPage selectGender(Gender gender) {
+        log.info("Select Gender {}", gender.label());
         click(genderLabel(gender));
         return this;
     }
@@ -122,6 +125,7 @@ public class PersonalDetailsPage extends AuthenticatedPage {
      * @return the confirmation toast message, which is the signal that the update has been stored
      */
     public String save() {
+        log.info("Save personal details");
         click(saveButton);
         return toast().getMessage();
     }
@@ -130,6 +134,7 @@ public class PersonalDetailsPage extends AuthenticatedPage {
      * Reloads the page so that values are read back from the server rather than from the edited form.
      */
     public PersonalDetailsPage reload() {
+        log.info("Reload page");
         driver.navigate().refresh();
         return new PersonalDetailsPage(driver);
     }

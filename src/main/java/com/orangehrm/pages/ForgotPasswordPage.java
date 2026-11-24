@@ -24,6 +24,7 @@ public class ForgotPasswordPage extends BasePage {
     }
 
     public LoginPage cancel() {
+        log.info("Cancel password reset");
         click(cancelButton);
         return new LoginPage(driver);
     }

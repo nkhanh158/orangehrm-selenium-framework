@@ -26,6 +26,7 @@ public class SidebarComponent extends BasePage {
     }
 
     public SidebarComponent search(String text) {
+        log.info("Search menu for '{}'", text);
         type(searchInput, text);
         return this;
     }
@@ -36,6 +37,7 @@ public class SidebarComponent extends BasePage {
     }
 
     private void openMenu(String name) {
+        log.info("Open menu {}", name);
         click(By.xpath("//a[contains(@class,'oxd-main-menu-item')][.//span[normalize-space()="
                 + XPathUtils.literal(name) + "]]"));
     }

@@ -3,6 +3,8 @@ package com.orangehrm.base;
 import com.orangehrm.config.ConfigReader;
 import com.orangehrm.utils.WaitUtils;
 import com.orangehrm.utils.XPathUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -24,6 +26,8 @@ public abstract class BasePage {
 
     private static final By LOADERS = By.cssSelector(".oxd-loading-spinner, .oxd-form-loader");
 
+    // Named after the concrete page or component, e.g. "LoginPage".
+    protected final Logger log = LogManager.getLogger(getClass());
     protected final WebDriver driver;
     protected final WebDriverWait wait;
 
@@ -37,6 +41,7 @@ public abstract class BasePage {
     }
 
     protected void click(By locator) {
+        log.debug("Click {}", locator);
         waitForSpinnerToDisappear();
         wait.until(WaitUtils.clickSucceeds(locator));
     }
@@ -44,8 +49,10 @@ public abstract class BasePage {
     /**
      * Replaces the field value. Select-all + delete is used instead of {@link WebElement#clear()}
      * because clear() does not trigger the input events Vue listens to.
+     * The value is not logged because it may be a password.
      */
     protected void type(By locator, String text) {
+        log.debug("Type into {}", locator);
         waitForSpinnerToDisappear();
         WebElement element = waitForVisible(locator);
         element.sendKeys(Keys.chord(Keys.CONTROL, "a"), Keys.DELETE);
