@@ -3,6 +3,10 @@ package com.orangehrm.tests.pim;
 import com.orangehrm.data.TestDataFactory;
 import com.orangehrm.models.Employee;
 import com.orangehrm.pages.pim.EmployeeListPage;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Story;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -11,9 +15,12 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
+@Feature("Employee management")
+@Story("Delete employee")
 public class DeleteEmployeeTest extends PimBaseTest {
 
     @Test(groups = {"smoke", "regression"}, description = "PIM-09: Delete an employee from its table row")
+    @Severity(SeverityLevel.CRITICAL)
     public void shouldDeleteOnlyTheEmployeeInTheSelectedRow() {
         String marker = TestDataFactory.uniqueSuffix();
         Employee target = TestDataFactory.randomEmployee(marker);

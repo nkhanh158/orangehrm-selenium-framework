@@ -1,5 +1,7 @@
 package com.orangehrm.config;
 
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -8,6 +10,8 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertThrows;
 import static org.testng.Assert.assertTrue;
 
+@Feature("Framework")
+@Story("Configuration")
 @Test(groups = {"framework", "serial"})
 public class ConfigReaderTest {
 

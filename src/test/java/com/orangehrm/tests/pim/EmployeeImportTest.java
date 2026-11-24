@@ -6,6 +6,8 @@ import com.orangehrm.data.TestDataFactory;
 import com.orangehrm.flows.EmployeeFlow;
 import com.orangehrm.models.Employee;
 import com.orangehrm.pages.pim.EmployeeListPage;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -14,6 +16,8 @@ import java.util.Map;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
+@Feature("Employee management")
+@Story("Import employees")
 public class EmployeeImportTest extends BaseTest {
 
     private static final String EMPLOYEES_FILE = "testdata/employees.xlsx";

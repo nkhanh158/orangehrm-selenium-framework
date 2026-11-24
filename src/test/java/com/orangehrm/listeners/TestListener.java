@@ -2,20 +2,26 @@ package com.orangehrm.listeners;
 
 import com.orangehrm.base.BaseTest;
 import com.orangehrm.utils.ScreenshotUtils;
+import io.qameta.allure.Allure;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
+import org.testng.IInvokedMethod;
+import org.testng.IInvokedMethodListener;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 
 /**
- * Logs the start and outcome of every test and captures a screenshot when a UI test fails.
+ * Logs the start and outcome of every test and attaches evidence to the Allure report when a UI test fails.
  */
-public class TestListener implements ITestListener {
+public class TestListener implements ITestListener, IInvokedMethodListener {
 
     private static final Logger LOG = LogManager.getLogger(TestListener.class);
 
@@ -37,23 +43,44 @@ public class TestListener implements ITestListener {
     @Override
     public void onTestFailure(ITestResult result) {
         LOG.error("FAIL  {} ({} ms)", testName(result), duration(result), result.getThrowable());
-        captureScreenshot(result);
     }
 
-    private static void captureScreenshot(ITestResult result) {
-        if (!(result.getInstance() instanceof BaseTest test)) {
+    /**
+     * Runs right after the test method, before {@link #onTestFailure}. Evidence cannot be attached in
+     * onTestFailure: Allure's own listener may already have closed the test result by then.
+     */
+    @Override
+    public void afterInvocation(IInvokedMethod method, ITestResult result) {
+        if (method.isTestMethod() && result.getStatus() == ITestResult.FAILURE) {
+            attachEvidence(result);
+        }
+    }
+
+    /**
+     * Attaches what the browser showed when the test failed: a screenshot, the URL and the page source (the DOM,
+     * which shows why a locator did not match). Each piece is captured separately, so one failing capture,
+     * e.g. because the browser has crashed, does not prevent the others.
+     */
+    private static void attachEvidence(ITestResult result) {
+        if (!(result.getInstance() instanceof BaseTest test) || test.getDriver() == null) {
             return;
         }
         WebDriver driver = test.getDriver();
-        if (driver == null) {
-            return;
-        }
         String name = result.getTestClass().getRealClass().getSimpleName() + "_" + result.getMethod().getMethodName();
         try {
             Path screenshot = ScreenshotUtils.capture(driver, name);
+            try (InputStream image = Files.newInputStream(screenshot)) {
+                Allure.addAttachment("Screenshot", "image/png", image, ".png");
+            }
             LOG.info("Screenshot saved: {}", screenshot);
-        } catch (WebDriverException e) {
+        } catch (WebDriverException | IOException e) {
             LOG.warn("Could not capture screenshot for {}: {}", name, e.getMessage());
+        }
+        try {
+            Allure.addAttachment("URL", "text/uri-list", driver.getCurrentUrl());
+            Allure.addAttachment("Page source", "text/html", driver.getPageSource(), ".html");
+        } catch (WebDriverException e) {
+            LOG.warn("Could not read URL or page source for {}: {}", name, e.getMessage());
         }
     }
 

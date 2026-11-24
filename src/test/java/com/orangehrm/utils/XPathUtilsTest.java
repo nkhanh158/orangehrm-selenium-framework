@@ -1,9 +1,13 @@
 package com.orangehrm.utils;
 
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 
+@Feature("Framework")
+@Story("Locators")
 @Test(groups = "framework")
 public class XPathUtilsTest {
 

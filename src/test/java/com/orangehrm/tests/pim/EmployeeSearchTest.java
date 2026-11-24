@@ -3,6 +3,10 @@ package com.orangehrm.tests.pim;
 import com.orangehrm.data.TestDataFactory;
 import com.orangehrm.models.Employee;
 import com.orangehrm.pages.pim.EmployeeListPage;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Story;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -11,11 +15,14 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
+@Feature("Employee management")
+@Story("Search employees")
 public class EmployeeSearchTest extends PimBaseTest {
 
     private static final String STATUS = "Full-Time Permanent";
 
     @Test(groups = {"smoke", "regression"}, description = "PIM-06: Search employee by name using autocomplete")
+    @Severity(SeverityLevel.CRITICAL)
     public void shouldFindEmployeeBySelectedNameSuggestion() {
         Employee employee = TestDataFactory.randomEmployee();
         createEmployeesAsAdmin(employee);

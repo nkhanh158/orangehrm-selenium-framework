@@ -7,10 +7,14 @@ import com.orangehrm.flows.EmployeeFlow;
 import com.orangehrm.models.Employee;
 import com.orangehrm.models.LoginDetails;
 import com.orangehrm.pages.DashboardPage;
-import com.orangehrm.pages.pim.AddEmployeePage;
 import com.orangehrm.pages.pim.AddEmployeePage.Field;
+import com.orangehrm.pages.pim.AddEmployeePage;
 import com.orangehrm.pages.pim.EmployeeListPage;
 import com.orangehrm.pages.pim.PersonalDetailsPage;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Story;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 
@@ -18,12 +22,15 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
+@Feature("Employee management")
+@Story("Add employee")
 public class AddEmployeeTest extends BaseTest {
 
     private static final String AVATAR = "testdata/avatar.png";
     private static final int NAME_MAX_LENGTH = 30;
 
     @Test(groups = {"smoke", "regression"}, description = "PIM-01: Add employee with required fields only")
+    @Severity(SeverityLevel.CRITICAL)
     public void shouldCreateEmployeeWithRequiredFieldsOnly() {
         Employee employee = TestDataFactory.randomEmployee();
         cleanupAfterTest(() -> new EmployeeFlow(driver).deleteEmployeeIfExists(employee.employeeId()));

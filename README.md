@@ -11,6 +11,7 @@ Test automation framework for [OrangeHRM Open Source](https://opensource-demo.or
 - Selenium WebDriver 4 (drivers resolved by Selenium Manager)
 - TestNG
 - Log4j 2
+- Allure Report 2
 - Datafaker, Jackson and Apache POI for test data
 
 ## Prerequisites
@@ -64,7 +65,20 @@ mvn clean test -Dbrowser=edge -Dheadless=true
 
 Any configuration key can be overridden by a JVM system property (`-DbaseUrl=...`) or an environment variable (`BASE_URL`), in that order of precedence over the environment properties file.
 
-Screenshots of failed tests are saved to `target/screenshots/`.
+### Allure report
+
+Tests write Allure results to `target/allure-results/`. The Maven plugin downloads the Allure command line and
+builds the report from them:
+
+```bash
+mvn clean test -Psmoke
+mvn allure:serve      # builds the report and opens it in the browser
+mvn allure:report     # builds it to target/site/allure-maven-plugin/
+```
+
+The report groups tests by feature and story, shows each test as a tree of steps (`@Step` on page methods) and
+lists the environment the tests ran in. A failed UI test has a screenshot, its URL and the page source attached.
+Screenshots are also saved to `target/screenshots/`.
 
 ### Logs
 
@@ -92,6 +106,24 @@ OrangeHRM is a Vue application that re-renders tables and forms frequently. Page
 
 Surefire 3.6 runs TestNG on the JUnit Platform, which cannot read TestNG suite XML files. The project stays on
 the 3.5 line so that suites, groups and parallel settings are defined in TestNG's own format.
+
+### Allure Java 2.x
+
+Allure Java 3 was released in September 2026 with a rewritten lifecycle. The project stays on the maintained 2.x
+line, which most documentation and existing projects are based on.
+
+Two consequences of 2.x are handled in the framework:
+
+- Evidence of a failure is attached in `afterInvocation`, which runs before Allure's own listener closes the test
+  result in `onTestFailure`.
+- `@Step` stores every argument in the results files, even when a parameter is hidden in the report. Login methods
+  therefore report their step with `Allure.step(...)`, which records no arguments, so passwords are never written
+  to `target/allure-results/`.
+
+### One description per step
+
+A step is described once, by `@Step`. A step listener writes each step to the log, so the report and the log show
+the same steps without repeating the text in a `log.info` call.
 
 ### Parallel execution
 

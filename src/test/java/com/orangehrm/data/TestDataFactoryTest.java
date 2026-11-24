@@ -2,6 +2,8 @@ package com.orangehrm.data;
 
 import com.orangehrm.models.Employee;
 import com.orangehrm.models.LoginDetails;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.testng.annotations.Test;
 
 import java.util.HashSet;
@@ -12,6 +14,8 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
+@Feature("Framework")
+@Story("Test data")
 @Test(groups = "framework")
 public class TestDataFactoryTest {
 

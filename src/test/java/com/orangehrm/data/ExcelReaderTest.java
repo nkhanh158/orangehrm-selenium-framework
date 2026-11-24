@@ -1,5 +1,7 @@
 package com.orangehrm.data;
 
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -16,6 +18,8 @@ import java.util.Map;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertThrows;
 
+@Feature("Framework")
+@Story("Test data")
 @Test(groups = "framework")
 public class ExcelReaderTest {
 
