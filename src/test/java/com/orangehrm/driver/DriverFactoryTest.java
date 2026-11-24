@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertTrue;
 
+@Test(groups = "framework")
 public class DriverFactoryTest extends BaseTest {
 
     @Test

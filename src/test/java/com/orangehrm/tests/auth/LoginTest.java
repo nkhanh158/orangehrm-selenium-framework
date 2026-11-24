@@ -19,7 +19,7 @@ public class LoginTest extends BaseTest {
 
     private static final String INVALID_LOGIN_DATA = "testdata/login-data.json";
 
-    @Test(groups = "smoke", description = "AUTH-01: Login with valid admin credentials")
+    @Test(groups = {"smoke", "regression"}, description = "AUTH-01: Login with valid admin credentials")
     public void shouldOpenDashboardWhenCredentialsAreValid() {
         DashboardPage dashboard = new LoginPage(driver)
                 .loginAs(ConfigReader.adminUsername(), ConfigReader.adminPassword());

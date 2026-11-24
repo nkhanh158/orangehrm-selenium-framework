@@ -13,7 +13,7 @@ import static org.testng.Assert.assertTrue;
 
 public class DeleteEmployeeTest extends PimBaseTest {
 
-    @Test(groups = "smoke", description = "PIM-09: Delete an employee from its table row")
+    @Test(groups = {"smoke", "regression"}, description = "PIM-09: Delete an employee from its table row")
     public void shouldDeleteOnlyTheEmployeeInTheSelectedRow() {
         String marker = TestDataFactory.uniqueSuffix();
         Employee target = TestDataFactory.randomEmployee(marker);

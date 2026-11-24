@@ -211,7 +211,9 @@ so an ascending check alone would pass even if sorting did nothing.
 | 3 | Check the last page | There is no next page; the number of pages is the total divided by 50, rounded up |
 
 Skipped when the environment has 50 employees or fewer, since there is then no second page.
-On the shared demo, other users can add or delete employees while the pages are visited.
+On the shared demo, other users can add or delete employees while the pages are visited. The record count is
+therefore read before and after visiting the pages; when it differs, the pages are visited again (up to three times)
+and the test is skipped if the data never stays unchanged.
 
 ### PIM-13 – Create employees from an Excel file
 

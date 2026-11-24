@@ -14,6 +14,7 @@ import java.util.List;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertThrows;
 
+@Test(groups = "framework")
 public class JsonReaderTest {
 
     @Test

@@ -8,6 +8,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertThrows;
 import static org.testng.Assert.assertTrue;
 
+@Test(groups = {"framework", "serial"})
 public class ConfigReaderTest {
 
     private String originalTimeout;

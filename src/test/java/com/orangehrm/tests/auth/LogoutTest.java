@@ -8,7 +8,7 @@ import static org.testng.Assert.assertTrue;
 
 public class LogoutTest extends BaseTest {
 
-    @Test(groups = "smoke", description = "AUTH-03: Logout from the header menu")
+    @Test(groups = {"smoke", "regression"}, description = "AUTH-03: Logout from the header menu")
     public void shouldReturnToLoginPageAfterLogout() {
         LoginPage loginPage = loginAsAdmin().header().logout();
 

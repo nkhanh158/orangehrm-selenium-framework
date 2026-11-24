@@ -15,7 +15,7 @@ public class EmployeeSearchTest extends PimBaseTest {
 
     private static final String STATUS = "Full-Time Permanent";
 
-    @Test(groups = "regression", description = "PIM-06: Search employee by name using autocomplete")
+    @Test(groups = {"smoke", "regression"}, description = "PIM-06: Search employee by name using autocomplete")
     public void shouldFindEmployeeBySelectedNameSuggestion() {
         Employee employee = TestDataFactory.randomEmployee();
         createEmployeesAsAdmin(employee);

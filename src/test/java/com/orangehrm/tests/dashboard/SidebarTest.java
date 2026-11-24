@@ -11,7 +11,7 @@ import static org.testng.Assert.assertTrue;
 
 public class SidebarTest extends BaseTest {
 
-    @Test(groups = "regression", description = "DASH-02: Side menu search filters the menu items")
+    @Test(groups = {"smoke", "regression"}, description = "DASH-02: Side menu search filters the menu items")
     public void shouldShowOnlyMenuItemsMatchingSearchTerm() {
         String term = "ti";
 

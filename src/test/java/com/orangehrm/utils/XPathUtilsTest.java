@@ -4,6 +4,7 @@ import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 
+@Test(groups = "framework")
 public class XPathUtilsTest {
 
     @Test
