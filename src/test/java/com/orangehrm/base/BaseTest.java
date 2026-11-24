@@ -2,7 +2,7 @@ package com.orangehrm.base;
 
 import com.orangehrm.config.ConfigReader;
 import com.orangehrm.driver.DriverFactory;
-import com.orangehrm.listeners.AllureEnvironmentListener;
+import com.orangehrm.listeners.AllureResultsListener;
 import com.orangehrm.listeners.TestListener;
 import com.orangehrm.pages.DashboardPage;
 import com.orangehrm.pages.LoginPage;
@@ -16,7 +16,7 @@ import org.testng.annotations.Listeners;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-@Listeners({TestListener.class, AllureEnvironmentListener.class})
+@Listeners({TestListener.class, AllureResultsListener.class})
 public abstract class BaseTest {
 
     private static final Logger LOG = LogManager.getLogger(BaseTest.class);
