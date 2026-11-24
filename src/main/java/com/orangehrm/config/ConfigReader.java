@@ -45,6 +45,17 @@ public final class ConfigReader {
         return getBoolean("headless", FrameworkConstants.DEFAULT_HEADLESS);
     }
 
+    /**
+     * How many times a test is run again after a failure that looks caused by the environment. 0 disables retries.
+     */
+    public static int retryCount() {
+        int value = getInt("retryCount", FrameworkConstants.DEFAULT_RETRY_COUNT);
+        if (value < 0) {
+            throw new IllegalStateException("Config 'retryCount' must not be negative but was " + value + ".");
+        }
+        return value;
+    }
+
     public static String adminUsername() {
         return get("adminUsername");
     }
@@ -70,7 +81,15 @@ public final class ConfigReader {
     }
 
     public static int getInt(String key) {
-        String value = get(key);
+        return parseInt(key, get(key));
+    }
+
+    public static int getInt(String key, int defaultValue) {
+        String value = resolve(key);
+        return value != null ? parseInt(key, value) : defaultValue;
+    }
+
+    private static int parseInt(String key, String value) {
         try {
             return Integer.parseInt(value);
         } catch (NumberFormatException e) {

@@ -54,6 +54,7 @@ others).
 | `env` | `demo` | `demo` | `-Denv=demo` |
 | `browser` | `chrome`, `firefox`, `edge` | `chrome` | `-Dbrowser=firefox` |
 | `headless` | `true`, `false` | `false` | `-Dheadless=true` |
+| `retryCount` | `0` or more | `1` | `-DretryCount=0` |
 
 ```bash
 # Run a single test class (overrides the suite file)
@@ -79,6 +80,23 @@ mvn allure:report     # builds it to target/site/allure-maven-plugin/
 The report groups tests by feature and story, shows each test as a tree of steps (`@Step` on page methods) and
 lists the environment the tests ran in. A failed UI test has a screenshot, its URL and the page source attached.
 Screenshots are also saved to `target/screenshots/`.
+
+### Retries and failure types
+
+Every failure gets a first guess at its cause, shown on the Categories page of the report and in the log:
+
+| Failure type | Typical exception | Retried |
+| --- | --- | --- |
+| Suspected environment problem: server error | any, while the page received a 5xx response | yes |
+| Suspected environment problem: browser or network | lost browser session, connection refused, `net::ERR_*` | yes |
+| Timed out waiting: slow environment or wrong locator | `TimeoutException` | yes |
+| Suspected product defect | `AssertionError` | no |
+| Suspected test defect | any other, e.g. `NoSuchElementException` | no |
+
+A test is run again at most `retryCount` times, only for the first three types: an assertion or a script error
+fails the same way every time. Retries are not hidden. The log shows `RETRY` with the failure type, Surefire lists
+every run, and the report keeps each failed attempt under the test's Retries tab and marks a test that passed only
+when run again as flaky. Use `-DretryCount=0` while debugging a test locally.
 
 ### Logs
 
@@ -124,6 +142,16 @@ Two consequences of 2.x are handled in the framework:
 
 A step is described once, by `@Step`. A step listener writes each step to the log, so the report and the log show
 the same steps without repeating the text in a `log.info` call.
+
+### Failure classification
+
+The failure type is added to the exception as a suppressed `FailureClassification`. It is printed with the stack
+trace, which is what Allure categories match on, and the original exception and its message stay unchanged.
+Server errors are found with the browser's Resource Timing API, which keeps the HTTP status of the page and of
+each API call it made; only Chromium based browsers report it.
+
+TestNG reports a retried attempt as skipped. A small Allure lifecycle listener reports it with its real status
+instead, so that the attempt appears as a failed retry and the final result can be marked flaky.
 
 ### Parallel execution
 
