@@ -1,6 +1,7 @@
 package com.orangehrm.components;
 
 import com.orangehrm.base.BasePage;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -38,8 +39,8 @@ public class PaginationComponent extends BasePage {
         return !driver.findElements(nextButton).isEmpty();
     }
 
+    @Step("Go to next page")
     public void goToNextPage() {
-        log.info("Go to next page");
         table.reloadAfter(() -> click(nextButton));
     }
 }

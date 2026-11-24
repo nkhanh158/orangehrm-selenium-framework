@@ -3,11 +3,15 @@ package com.orangehrm.tests.auth;
 import com.orangehrm.base.BaseTest;
 import com.orangehrm.pages.ForgotPasswordPage;
 import com.orangehrm.pages.LoginPage;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
+@Feature("Authentication")
+@Story("Password reset")
 public class ForgotPasswordTest extends BaseTest {
 
     @Test(groups = "regression", description = "AUTH-06: Forgot password link opens the Reset Password page")

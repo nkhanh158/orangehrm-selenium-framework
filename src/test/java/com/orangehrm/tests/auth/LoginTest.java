@@ -6,6 +6,10 @@ import com.orangehrm.data.JsonReader;
 import com.orangehrm.models.LoginAttempt;
 import com.orangehrm.pages.DashboardPage;
 import com.orangehrm.pages.LoginPage;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Story;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -15,11 +19,14 @@ import java.util.Map;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
+@Feature("Authentication")
+@Story("Login")
 public class LoginTest extends BaseTest {
 
     private static final String INVALID_LOGIN_DATA = "testdata/login-data.json";
 
     @Test(groups = {"smoke", "regression"}, description = "AUTH-01: Login with valid admin credentials")
+    @Severity(SeverityLevel.BLOCKER)
     public void shouldOpenDashboardWhenCredentialsAreValid() {
         DashboardPage dashboard = new LoginPage(driver)
                 .loginAs(ConfigReader.adminUsername(), ConfigReader.adminPassword());

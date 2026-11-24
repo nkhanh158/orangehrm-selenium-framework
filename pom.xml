@@ -24,10 +24,15 @@
         <jackson.version>2.22.4</jackson.version>
         <poi.version>5.5.1</poi.version>
         <log4j.version>2.26.1</log4j.version>
+        <allure.version>2.35.6</allure.version>
+        <aspectj.version>1.9.27</aspectj.version>
 
         <!-- Plugins -->
         <maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
+        <allure-maven.version>2.17.0</allure-maven.version>
+        <!-- Allure command line used by allure:report and allure:serve; downloaded by the plugin. -->
+        <allure-commandline.version>2.46.2</allure-commandline.version>
     </properties>
 
     <dependencyManagement>
@@ -37,6 +42,14 @@
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-bom</artifactId>
                 <version>${log4j.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-bom</artifactId>
+                <version>${allure.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -95,6 +108,19 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j2-impl</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-testng</artifactId>
+        </dependency>
+
+        <!-- Not used by the code: listed so that Maven downloads the agent that the tests run with. -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectj.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -110,11 +136,24 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
-                    <argLine>-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager</argLine>
+                    <!-- The AspectJ agent lets Allure record methods annotated with @Step. -->
+                    <argLine>
+                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+                        -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager
+                    </argLine>
                     <!-- -Dtest=... takes precedence over the suite file. -->
                     <suiteXmlFiles>
                         <suiteXmlFile>src/test/resources/${suite}</suiteXmlFile>
                     </suiteXmlFiles>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-maven</artifactId>
+                <version>${allure-maven.version}</version>
+                <configuration>
+                    <reportVersion>${allure-commandline.version}</reportVersion>
                 </configuration>
             </plugin>
         </plugins>

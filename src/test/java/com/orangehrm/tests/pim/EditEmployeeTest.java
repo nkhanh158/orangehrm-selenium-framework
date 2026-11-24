@@ -4,6 +4,8 @@ import com.orangehrm.data.TestDataFactory;
 import com.orangehrm.models.Gender;
 import com.orangehrm.models.PersonalDetails;
 import com.orangehrm.pages.pim.PersonalDetailsPage;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.testng.annotations.Test;
 
 import java.time.LocalDate;
@@ -11,6 +13,8 @@ import java.time.LocalDate;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 
+@Feature("Employee management")
+@Story("Edit employee")
 public class EditEmployeeTest extends PimBaseTest {
 
     private static final String NEW_MIDDLE_NAME = "Edited";

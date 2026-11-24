@@ -3,6 +3,8 @@ package com.orangehrm.data;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.orangehrm.models.Employee;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
@@ -14,6 +16,8 @@ import java.util.List;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertThrows;
 
+@Feature("Framework")
+@Story("Test data")
 @Test(groups = "framework")
 public class JsonReaderTest {
 

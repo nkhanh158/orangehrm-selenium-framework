@@ -4,6 +4,8 @@ target/
 # Test artifacts
 allure-results/
 allure-report/
+# Allure command line downloaded by allure-maven
+.allure/
 logs/
 downloads/
 test-output/

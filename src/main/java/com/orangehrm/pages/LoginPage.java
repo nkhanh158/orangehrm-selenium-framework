@@ -2,6 +2,8 @@ package com.orangehrm.pages;
 
 import com.orangehrm.base.BasePage;
 import com.orangehrm.models.LoginErrors;
+import io.qameta.allure.Allure;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -27,22 +29,25 @@ public class LoginPage extends BasePage {
 
     /**
      * Logs in and waits for the redirect to the Dashboard. Navigating away earlier would cancel the login request.
+     * <p>
+     * The login methods report their step with {@link Allure#step} rather than {@code @Step}: an annotated step
+     * stores every argument in the results, so the password would be written to disk even if hidden in the report.
      *
      * @throws IllegalStateException if the Dashboard is not reached, e.g. because the credentials were rejected
      */
     public DashboardPage loginAs(String username, String password) {
-        log.info("Log in as '{}'", username);
-        enterCredentials(username, password);
-        if (!waitForUrlContains(DASHBOARD_URL_FRAGMENT)) {
-            throw new IllegalStateException("Login as '" + username + "' did not reach the Dashboard. Current URL: "
-                    + driver.getCurrentUrl());
-        }
-        return new DashboardPage(driver);
+        return Allure.step("Log in as '" + username + "'", () -> {
+            enterCredentials(username, password);
+            if (!waitForUrlContains(DASHBOARD_URL_FRAGMENT)) {
+                throw new IllegalStateException("Login as '" + username + "' did not reach the Dashboard. "
+                        + "Current URL: " + driver.getCurrentUrl());
+            }
+            return new DashboardPage(driver);
+        });
     }
 
     public LoginPage loginExpectingError(String username, String password) {
-        log.info("Log in as '{}', expecting an error", username);
-        enterCredentials(username, password);
+        Allure.step("Log in as '" + username + "', expecting an error", () -> enterCredentials(username, password));
         return this;
     }
 
@@ -58,8 +63,8 @@ public class LoginPage extends BasePage {
                 textIfPresent(fieldError("Password")));
     }
 
+    @Step("Open Forgot your password")
     public ForgotPasswordPage clickForgotPassword() {
-        log.info("Open Forgot your password");
         click(forgotPasswordLink);
         return new ForgotPasswordPage(driver);
     }

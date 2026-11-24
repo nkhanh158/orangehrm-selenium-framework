@@ -1,10 +1,12 @@
 package com.orangehrm.tests.pim;
 
-import com.orangehrm.components.DataTableComponent;
 import com.orangehrm.components.DataTableComponent.SortOrder;
+import com.orangehrm.components.DataTableComponent;
 import com.orangehrm.data.TestDataFactory;
 import com.orangehrm.models.Employee;
 import com.orangehrm.pages.pim.EmployeeListPage;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 
@@ -14,6 +16,8 @@ import java.util.List;
 import static com.orangehrm.components.PaginationComponent.PAGE_SIZE;
 import static org.testng.Assert.assertEquals;
 
+@Feature("Employee management")
+@Story("Employee list")
 public class EmployeeTableTest extends PimBaseTest {
 
     private static final String NAME_COLUMN = "First (& Middle) Name";

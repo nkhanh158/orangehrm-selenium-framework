@@ -3,6 +3,7 @@ package com.orangehrm.flows;
 import com.orangehrm.models.Employee;
 import com.orangehrm.pages.pim.EmployeeListPage;
 import com.orangehrm.pages.pim.PersonalDetailsPage;
+import io.qameta.allure.Step;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
@@ -21,8 +22,8 @@ public class EmployeeFlow {
         this.driver = driver;
     }
 
+    @Step("Create employee {employee.employeeId}")
     public PersonalDetailsPage createEmployee(Employee employee) {
-        LOG.info("Create employee {}", employee.employeeId());
         PersonalDetailsPage details = EmployeeListPage.open(driver)
                 .clickAdd()
                 .addEmployee(employee);
@@ -33,8 +34,8 @@ public class EmployeeFlow {
     /**
      * Deletes the employee if it exists. Safe to call when the employee was never created or already deleted.
      */
+    @Step("Delete employee {employeeId} if it exists")
     public void deleteEmployeeIfExists(String employeeId) {
-        LOG.info("Delete employee {} if it exists", employeeId);
         EmployeeListPage list = EmployeeListPage.open(driver).searchByEmployeeId(employeeId);
         if (list.table().hasRowWithCell(employeeId)) {
             list.deleteEmployee(employeeId);

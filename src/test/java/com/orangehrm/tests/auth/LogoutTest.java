@@ -2,13 +2,20 @@ package com.orangehrm.tests.auth;
 
 import com.orangehrm.base.BaseTest;
 import com.orangehrm.pages.LoginPage;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Story;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertTrue;
 
+@Feature("Authentication")
+@Story("Logout")
 public class LogoutTest extends BaseTest {
 
     @Test(groups = {"smoke", "regression"}, description = "AUTH-03: Logout from the header menu")
+    @Severity(SeverityLevel.CRITICAL)
     public void shouldReturnToLoginPageAfterLogout() {
         LoginPage loginPage = loginAsAdmin().header().logout();
 

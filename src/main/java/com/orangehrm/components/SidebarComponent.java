@@ -3,6 +3,7 @@ package com.orangehrm.components;
 import com.orangehrm.base.BasePage;
 import com.orangehrm.pages.pim.EmployeeListPage;
 import com.orangehrm.utils.XPathUtils;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -25,8 +26,8 @@ public class SidebarComponent extends BasePage {
         return new EmployeeListPage(driver);
     }
 
+    @Step("Search menu for '{text}'")
     public SidebarComponent search(String text) {
-        log.info("Search menu for '{}'", text);
         type(searchInput, text);
         return this;
     }
@@ -36,8 +37,8 @@ public class SidebarComponent extends BasePage {
         return getTexts(menuItemNames);
     }
 
+    @Step("Open menu {name}")
     private void openMenu(String name) {
-        log.info("Open menu {}", name);
         click(By.xpath("//a[contains(@class,'oxd-main-menu-item')][.//span[normalize-space()="
                 + XPathUtils.literal(name) + "]]"));
     }

@@ -2,6 +2,7 @@ package com.orangehrm.components;
 
 import com.orangehrm.base.BasePage;
 import com.orangehrm.pages.LoginPage;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -32,8 +33,8 @@ public class HeaderComponent extends BasePage {
      * Logs out and waits until the server has ended the session and redirected to the Login page.
      * Navigating away earlier would cancel the logout request.
      */
+    @Step("Log out")
     public LoginPage logout() {
-        log.info("Log out");
         click(userDropdown);
         click(logoutLink);
         wait.until(ExpectedConditions.urlContains(LOGIN_URL_FRAGMENT));
