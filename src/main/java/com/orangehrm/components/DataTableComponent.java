@@ -2,6 +2,7 @@ package com.orangehrm.components;
 
 import com.orangehrm.base.BasePage;
 import com.orangehrm.utils.XPathUtils;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -124,8 +125,8 @@ public class DataTableComponent extends BasePage {
     /**
      * Sorts by the column through the menu in its header and waits for the table to reload.
      */
+    @Step("Sort by '{header}' {order}")
     public void sortBy(String header, SortOrder order) {
-        log.info("Sort by '{}' {}", header, order.label);
         // text()[...] matches the header's own text; the hidden menu inside it adds "AscendingDescending".
         String headerCell = "//div[@role='columnheader'][text()[normalize-space()=" + XPathUtils.literal(header) + "]]";
         click(By.xpath(headerCell + "//i[contains(@class,'oxd-table-header-sort-icon')]"));

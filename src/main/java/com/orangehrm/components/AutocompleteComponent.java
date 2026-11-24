@@ -2,6 +2,7 @@ package com.orangehrm.components;
 
 import com.orangehrm.base.BasePage;
 import com.orangehrm.utils.XPathUtils;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -24,8 +25,8 @@ public class AutocompleteComponent extends BasePage {
         this.input = input;
     }
 
+    @Step("Type '{text}' into the autocomplete")
     public AutocompleteComponent type(String text) {
-        log.info("Type '{}'", text);
         type(input, text);
         return this;
     }
@@ -40,8 +41,8 @@ public class AutocompleteComponent extends BasePage {
         });
     }
 
+    @Step("Select suggestion '{suggestion}'")
     public void select(String suggestion) {
-        log.info("Select suggestion '{}'", suggestion);
         getSuggestions();
         click(By.xpath(OPTION + "[normalize-space()=" + XPathUtils.literal(suggestion) + "]"));
     }

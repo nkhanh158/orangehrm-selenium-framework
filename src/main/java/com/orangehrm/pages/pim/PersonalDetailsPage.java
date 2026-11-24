@@ -7,6 +7,7 @@ import com.orangehrm.models.Employee;
 import com.orangehrm.models.Gender;
 import com.orangehrm.models.PersonalDetails;
 import com.orangehrm.utils.XPathUtils;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -98,14 +99,14 @@ public class PersonalDetailsPage extends AuthenticatedPage {
                 getSelectedGender());
     }
 
+    @Step("Enter Middle Name '{middleName}'")
     public PersonalDetailsPage enterMiddleName(String middleName) {
-        log.info("Enter Middle Name '{}'", middleName);
         type(middleNameInput, middleName);
         return this;
     }
 
+    @Step("Enter Date of Birth {date}")
     public PersonalDetailsPage enterDateOfBirth(LocalDate date) {
-        log.info("Enter Date of Birth {}", date);
         dateOfBirth.set(date);
         return this;
     }
@@ -113,8 +114,8 @@ public class PersonalDetailsPage extends AuthenticatedPage {
     /**
      * Clicks the label: the radio input itself is hidden behind a styled span.
      */
+    @Step("Select Gender {gender}")
     public PersonalDetailsPage selectGender(Gender gender) {
-        log.info("Select Gender {}", gender.label());
         click(genderLabel(gender));
         return this;
     }
@@ -124,8 +125,8 @@ public class PersonalDetailsPage extends AuthenticatedPage {
      *
      * @return the confirmation toast message, which is the signal that the update has been stored
      */
+    @Step("Save personal details")
     public String save() {
-        log.info("Save personal details");
         click(saveButton);
         return toast().getMessage();
     }
@@ -133,8 +134,8 @@ public class PersonalDetailsPage extends AuthenticatedPage {
     /**
      * Reloads the page so that values are read back from the server rather than from the edited form.
      */
+    @Step("Reload page")
     public PersonalDetailsPage reload() {
-        log.info("Reload page");
         driver.navigate().refresh();
         return new PersonalDetailsPage(driver);
     }

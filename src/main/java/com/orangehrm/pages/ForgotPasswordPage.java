@@ -1,6 +1,7 @@
 package com.orangehrm.pages;
 
 import com.orangehrm.base.BasePage;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -23,8 +24,8 @@ public class ForgotPasswordPage extends BasePage {
         return getText(title);
     }
 
+    @Step("Cancel password reset")
     public LoginPage cancel() {
-        log.info("Cancel password reset");
         click(cancelButton);
         return new LoginPage(driver);
     }
