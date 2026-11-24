@@ -10,6 +10,8 @@ Test automation framework for [OrangeHRM Open Source](https://opensource-demo.or
 - Maven
 - Selenium WebDriver 4 (drivers resolved by Selenium Manager)
 - TestNG
+- Log4j 2
+- Datafaker, Jackson and Apache POI for test data
 
 ## Prerequisites
 
@@ -63,6 +65,18 @@ mvn clean test -Dbrowser=edge -Dheadless=true
 Any configuration key can be overridden by a JVM system property (`-DbaseUrl=...`) or an environment variable (`BASE_URL`), in that order of precedence over the environment properties file.
 
 Screenshots of failed tests are saved to `target/screenshots/`.
+
+### Logs
+
+Each test logs its start, its main steps and its outcome to the console and to `logs/automation.log`, which rolls
+over to `logs/automation-yyyy-MM-dd.log` every day (kept for 14 days). Clicks and typing are logged at DEBUG level,
+by locator only, so that typed passwords never appear in a log:
+
+```bash
+mvn clean test -Psmoke -DlogLevel=DEBUG
+```
+
+Selenium (java.util.logging) and TestNG (SLF4J) log through Log4j as well, so all output follows `log4j2.xml`.
 
 ## Design Decisions
 

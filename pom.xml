@@ -6,7 +6,7 @@
 
     <groupId>com.orangehrm</groupId>
     <artifactId>orangehrm-selenium-framework</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>OrangeHRM Selenium Framework</name>
@@ -23,11 +23,25 @@
         <datafaker.version>2.7.0</datafaker.version>
         <jackson.version>2.22.4</jackson.version>
         <poi.version>5.5.1</poi.version>
+        <log4j.version>2.26.1</log4j.version>
 
         <!-- Plugins -->
         <maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Keeps every Log4j module, including log4j-api pulled in by POI, on the same version. -->
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-bom</artifactId>
+                <version>${log4j.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -59,6 +73,28 @@
             <artifactId>poi-ooxml</artifactId>
             <version>${poi.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+        </dependency>
+
+        <!-- Routes java.util.logging, which Selenium uses, through Log4j. -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-jul</artifactId>
+        </dependency>
+
+        <!-- Routes SLF4J, which TestNG uses, through Log4j. -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j2-impl</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -74,6 +110,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
+                    <argLine>-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager</argLine>
                     <!-- -Dtest=... takes precedence over the suite file. -->
                     <suiteXmlFiles>
                         <suiteXmlFile>src/test/resources/${suite}</suiteXmlFile>

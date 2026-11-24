@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Framework messages go to the console and to logs/automation.log, which rolls over to
+     logs/automation-yyyy-MM-dd.log every day; files older than 14 days are deleted.
+     The framework level can be changed without editing this file: -DlogLevel=DEBUG -->
+<Configuration status="WARN">
+    <Properties>
+        <Property name="logDir">logs</Property>
+        <Property name="filePattern">%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%t] %c{1} - %msg%n</Property>
+        <!-- Stack traces are printed by Surefire already, so the console shows only the exception's first line. -->
+        <Property name="consolePattern">%d{HH:mm:ss.SSS} %-5level [%t] %c{1} - %msg%n%throwable{short}</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${consolePattern}"/>
+        </Console>
+
+        <RollingFile name="File" fileName="${logDir}/automation.log"
+                     filePattern="${logDir}/automation-%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="${filePattern}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${logDir}">
+                    <IfFileName glob="automation-*.log"/>
+                    <IfLastModified age="P14D"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="com.orangehrm" level="${sys:logLevel:-INFO}" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Logger>
+
+        <!-- Selenium warns on every browser start that its DevTools version is older than the browser's.
+             DevTools is not used, so the warning is noise. -->
+        <Logger name="org.openqa.selenium.devtools" level="ERROR"/>
+
+        <Root level="WARN">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Root>
+    </Loggers>
+</Configuration>
