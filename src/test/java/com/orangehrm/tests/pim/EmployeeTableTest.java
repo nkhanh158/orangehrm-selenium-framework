@@ -17,6 +17,7 @@ import static org.testng.Assert.assertEquals;
 public class EmployeeTableTest extends PimBaseTest {
 
     private static final String NAME_COLUMN = "First (& Middle) Name";
+    private static final int MAX_PAGE_WALKS = 3;
     // Created out of order and in mixed case: a case-sensitive sort would put "Bravo" first.
     private static final List<String> FIRST_NAMES = List.of("charlie", "alpha", "Bravo");
 
@@ -38,23 +39,43 @@ public class EmployeeTableTest extends PimBaseTest {
                 FIRST_NAMES.stream().sorted(String.CASE_INSENSITIVE_ORDER).toList(), "Ascending");
     }
 
-    @Test(groups = "regression", description = "PIM-12: Pagination")
+    @Test(groups = {"regression", "serial"}, description = "PIM-12: Pagination")
     public void shouldListEveryRecordAcrossPages() {
-        DataTableComponent table = loginAsAdmin().sidebar().goToPim().table();
-        int total = table.getTotalRecords();
-        if (total <= PAGE_SIZE) {
-            throw new SkipException("Needs more than " + PAGE_SIZE + " employees to have a second page, found " + total);
+        loginAsAdmin();
+        List<PageWalk> unstableWalks = new ArrayList<>();
+        for (int attempt = 1; attempt <= MAX_PAGE_WALKS; attempt++) {
+            PageWalk walk = walkAllPages(EmployeeListPage.open(driver).table());
+            if (walk.totalAtStart() <= PAGE_SIZE) {
+                throw new SkipException("Needs more than " + PAGE_SIZE + " employees to have a second page, found "
+                        + walk.totalAtStart());
+            }
+            if (walk.totalAtStart() != walk.totalAtEnd()) {
+                unstableWalks.add(walk);
+                continue;
+            }
+            int total = walk.totalAtStart();
+            assertEquals(walk.rowsPerPage().size(), (total + PAGE_SIZE - 1) / PAGE_SIZE, walk.toString());
+            assertEquals(walk.rowsPerPage().stream().mapToInt(Integer::intValue).sum(), total, walk.toString());
+            return;
         }
-        int expectedPages = (total + PAGE_SIZE - 1) / PAGE_SIZE;
+        throw new SkipException("Employees were added or deleted by someone else during every walk: " + unstableWalks);
+    }
 
+    /**
+     * Visits every page. The record count is read again at the end: on a shared environment a different count
+     * means the data changed while the pages were visited, so the row counts cannot be compared with it.
+     */
+    private static PageWalk walkAllPages(DataTableComponent table) {
+        int totalAtStart = table.getTotalRecords();
+        int maxPages = totalAtStart / PAGE_SIZE + 1;
         List<Integer> rowsPerPage = new ArrayList<>(List.of(table.getRowCount()));
-        while (table.pagination().hasNextPage() && rowsPerPage.size() <= expectedPages) {
+        while (table.pagination().hasNextPage() && rowsPerPage.size() <= maxPages) {
             table.pagination().goToNextPage();
             rowsPerPage.add(table.getRowCount());
         }
+        return new PageWalk(totalAtStart, rowsPerPage, table.getTotalRecords());
+    }
 
-        String summary = "Rows per page " + rowsPerPage + " for " + total + " records";
-        assertEquals(rowsPerPage.size(), expectedPages, summary);
-        assertEquals(rowsPerPage.stream().mapToInt(Integer::intValue).sum(), total, summary);
+    private record PageWalk(int totalAtStart, List<Integer> rowsPerPage, int totalAtEnd) {
     }
 }
